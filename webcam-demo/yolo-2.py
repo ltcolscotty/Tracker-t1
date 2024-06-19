@@ -37,18 +37,27 @@ while True:
             x1a, y1a, w, h = box.xywh[0]
 
             # Convert to coordinates
+
             # x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             bbox = int(x1a), int(y1a), int(w), int(h)
 
             print(x1a, y1a, w, h)
+
             # cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 2)
             cvzone.cornerRect(img, (x1a, y1a, w, h))
 
+            #Confidence
             confidence = math.ceil((box.conf[0] * 100)) / 100
             print(confidence)
 
+
+            #Class
+            cls = box.cls[0]
+            print(cls)
+
+
             cvzone.putTextRect(
-                img, f"{confidence}", (x1a, y1a - 20), (max(0, x1a), max(35, y1a))
+                img, f"{classNames[int(cls)]} {confidence}", (x1a, y1a - 20), (max(0, x1a), max(35, y1a))
             )
 
     cv2.imshow("Image", img)
