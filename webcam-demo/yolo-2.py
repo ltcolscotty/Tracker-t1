@@ -131,6 +131,8 @@ while True:
                 f"{classNames[int(cls)]} {confidence}",
                 (x1a, y1a - 20),
                 (max(0, x1a), max(35, y1a)),
+                scale=1,
+                thickness=1,
             )
 
     cv2.imshow("Image", img)
