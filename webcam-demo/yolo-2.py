@@ -4,13 +4,17 @@ import cvzone
 import math
 
 # video capture object
-cap = cv2.VideoCapture(0)
 
+cap = cv2.VideoCapture(0)  # Webcam
 # width
 cap.set(3, 1280)
 
 # height
 cap.set(4, 720)
+
+
+# cap = cv2.VideoCapture(0) #Video
+
 
 model = YOLO("../yolo-weights/yolov8n.pt")
 
@@ -105,35 +109,23 @@ while True:
         boxes = result.boxes
 
         for box in boxes:
-            # x1, y1, x2, y2 = box.xyxy[0]
-            x1a, y1a, w, h = box.xywh[0]
-
-            # Convert to coordinates
-
-            # x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-            bbox = int(x1a), int(y1a), int(w), int(h)
-
-            print(x1a, y1a, w, h)
-
-            # cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 2)
-            cvzone.cornerRect(img, (x1a, y1a, w, h))
-
+            # Bounding Box
+            x1, y1, x2, y2 = box.xyxy[0]
+            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+            # cv2.rectangle(img,(x1,y1),(x2,y2),(255,0,255),3)
+            w, h = x2 - x1, y2 - y1
+            cvzone.cornerRect(img, (x1, y1, w, h))
             # Confidence
-            confidence = math.ceil((box.conf[0] * 100)) / 100
-            print(confidence)
-
-            # Class
-            cls = box.cls[0]
-            print(cls)
+            conf = math.ceil((box.conf[0] * 100)) / 100
+            # Class Name
+            cls = int(box.cls[0])
 
             cvzone.putTextRect(
                 img,
-                f"{classNames[int(cls)]} {confidence}",
-                (x1a, y1a - 20),
-                (max(0, x1a), max(35, y1a)),
+                f"{classNames[cls]} {conf}",
+                (max(0, x1), max(35, y1)),
                 scale=1,
                 thickness=1,
             )
-
     cv2.imshow("Image", img)
     cv2.waitKey(1)
